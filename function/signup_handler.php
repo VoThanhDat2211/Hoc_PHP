@@ -45,17 +45,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 // insert du lieu
 if (empty($errors) && !empty($username)) {
-    $servername = "localhost";
-    $usernameDB = "root";
-    $passwordDB = "";
-    $dbname = "project_php";
 
-    require_once "../connectDB.php";
+    require_once "database/connectDB.php";
 
     // Kiểm tra xem người dùng đã tồn tại chưa
-    $sql = "SELECT * FROM user WHERE username = ? AND password = ?";
+    $sql = "SELECT * FROM user WHERE username = ?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ss", $username, $password);
+    $stmt->bind_param("s", $username);
     $stmt->execute();
     $result = $stmt->get_result();
 
@@ -65,8 +61,8 @@ if (empty($errors) && !empty($username)) {
         // Chèn người dùng mới vào cơ sở dữ liệu
         $sql_insert = "INSERT INTO user (username, password) VALUES (?, ?)";
         $stmt_insert = $conn->prepare($sql_insert);
-        $password = password_hash($password, PASSWORD_DEFAULT);
-        $stmt_insert->bind_param("ss", $username, $password);
+        $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+        $stmt_insert->bind_param("ss", $username, $passwordHash);
         $stmt_insert->execute();
         $stmt_insert->close();
 
@@ -74,10 +70,10 @@ if (empty($errors) && !empty($username)) {
         $_SESSION["username"] = $username;
         if (empty($_SESSION["username"])) {
             // neu mat session dieu huong ve trang login
-            //     header("Location: ../function_login/login_view.php");
+            header("Location: ../function_login/login_view.php");
         }
 
-        // dieu huong den trang todo
+        //dieu huong den trang todo
         header("Location: todo_view.php");
     }
 

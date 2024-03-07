@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once("signup_handler.php");
+require_once("function/signup_handler.php");
 
 ?>
 
@@ -89,7 +89,7 @@ require_once("signup_handler.php");
         }
 
         .content input:focus {
-            border: 3px solid black;
+            border-bottom: 1px solid rgb(222, 229, 250);
         }
 
         .content .btn input {
@@ -113,7 +113,7 @@ require_once("signup_handler.php");
 </head>
 
 <body>
-    <?php include "../header.php" ?>
+    <?php include "include/header.php" ?>
     <div class="login">
         <p>Already have a account <a href="../function_login/login_view.php"> Login</a></p>
     </div>
@@ -124,7 +124,7 @@ require_once("signup_handler.php");
                 <table>
                     <div class="row">
                         <tr>
-                            <td><label for="username">User Name.</label></td>
+                            <td><label for="username">User Name</label></td>
                             <td>
                                 <input type="text" name="username" placeholder="Input User Name" id="username"
                                     value="<?php echo $username ?>">
@@ -172,7 +172,7 @@ require_once("signup_handler.php");
                     <tr>
                         <td style="color:rgb(217,67,66)"><label for="captcha">
                                 <?php
-                                require_once "../genCaptcha.php";
+                                require_once "function/genCaptcha.php";
                                 echo $_SESSION['captchaSs'] ?>
                             </label></td>
                         <td>
