@@ -50,9 +50,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     $username = $_SESSION["username"];
                     $sql = "UPDATE user SET password = '$password' WHERE username = '$username' ";
                     if ($conn->query($sql)) {
-                        header("Location: todo.php");
-                    } else {
-                        echo "abc";
+                        echo "<script>alert('Đổi mật khẩu thành công')</script>";
+                        echo "<script>window.location.href = '../todo_view.php';</script>";
                     }
                 }
             } else {

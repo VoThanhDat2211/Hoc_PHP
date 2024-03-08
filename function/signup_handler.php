@@ -70,11 +70,11 @@ if (empty($errors) && !empty($username)) {
         $_SESSION["username"] = $username;
         if (empty($_SESSION["username"])) {
             // neu mat session dieu huong ve trang login
-            header("Location: ../function_login/login_view.php");
+            header("Location: function/login_view.php");
         }
 
-        //dieu huong den trang todo
-        header("Location: todo_view.php");
+        echo "<script>alert('Tạo tài khoản thành công')</script>";
+        echo "<script>window.location.href = '../todo_view.php';</script>";
     }
 
     $stmt->close();

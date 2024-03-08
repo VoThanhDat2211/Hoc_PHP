@@ -27,7 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if (empty($errors) && !empty($username)) {
         require_once "database/connectDB.php";
         // lay du lieu tu db 
-        $sql = "SELECT * FROM user WHERE username = ? ";
+        $sql = "SELECT * FROM user WHERE username = ? AND is_delete = 0";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("s", $username);
         $stmt->execute();

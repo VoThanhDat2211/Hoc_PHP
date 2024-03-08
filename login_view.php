@@ -2,7 +2,6 @@
 session_start();
 require_once("function/login_handler.php");
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -22,7 +21,7 @@ require_once("function/login_handler.php");
 
 
     /* Nav */
-    .login {
+    .signup {
         height: 60px;
         line-height: 60px;
         text-align: right;
@@ -31,15 +30,14 @@ require_once("function/login_handler.php");
         font-size: 20px;
     }
 
-    .login a {
+    .signup a {
         text-decoration: none;
         color: red;
         margin-left: 8px;
     }
 
-    .login a:hover {
+    .signup a:hover {
         color: #CC0000;
-        text-decoration: underline;
     }
 
     .content {
@@ -58,33 +56,34 @@ require_once("function/login_handler.php");
         font-size: 20px;
         font-weight: 600;
         margin-top: 28px;
-        position: relative;
+        width: 480px;
     }
 
-    .content table {
+    .form-list {
         font-size: 16px;
         margin: 16px;
+        margin-right: 0;
 
     }
 
+    .form-item {
+        display: flex;
+        width: 100%;
+        text-align: left;
 
-    .content td {
-        padding: 8px 8px;
-        height: 50px;
     }
 
-    .content td label {
-        font-weight: 600;
+    .form-item .item-left {
+        width: 200px;
+        padding-left: 12px;
     }
 
-    tr .error {
-
-        color: red;
-        font-style: italic;
+    .form-list .error {
+        padding-left: 170px;
         font-size: 14px;
-        left: 300px;
+        color: red;
+        opacity: 0.8;
     }
-
 
     .content input {
         width: 100%;
@@ -98,7 +97,6 @@ require_once("function/login_handler.php");
     }
 
     .content .btn input {
-        margin-top: 8px;
         border-radius: 15px;
         height: 30px;
         width: 100px;
@@ -113,76 +111,73 @@ require_once("function/login_handler.php");
         font-family: monospace;
         font-weight: 600;
         font-size: 16px;
+        background-color: rgb(204, 230, 255);
     }
     </style>
 </head>
 
 <body>
     <?php include "include/header.php" ?>
-    <div class="login">
-        <p>Don't have an account <a href="../function_signup/signup_view.php"> Create New Account</a></p>
+    <div class="signup">
+        <p>Don't have an account <a href="/signup_view.php"> Create New Account</a></p>
     </div>
     <div class="content">
         <form action="" method="post" id="form1">
             <fieldset>
-                <legend>Sign Up</legend>
-                <table>
-                    <div class="row">
-                        <tr>
-                            <td><label for="username">User Name</label></td>
-                            <td>
-                                <input type="text" name="username" placeholder="Input User Name" id="username"
-                                    value="<?php echo $username ?>">
-                            </td>
-                            <td class="error">
-                                <?php
-                                echo !empty($errors['username']['required']) ? $errors['username']['required'] : '';
-                                echo !empty($errors['username']['matched']) ? $errors['username']['matched'] : '';
-                                ?>
-                            </td>
-                        </tr>
+                <legend>Login</legend>
+                <div class="form-list">
+                    <div class="form-item">
+                        <div class="item-left">
+                            <label for="username">User Name</label>
+                        </div>
+                        <div class="item-right"><input type="text" name="username" placeholder="Input User Name"
+                                id="username" value="<?php echo $username ?>"></div>
                     </div>
+                    <span class="error">
+                        <?php
+                        echo !empty($errors['username']['required']) ? $errors['username']['required'] : '';
+                        echo !empty($errors['username']['matched']) ? $errors['username']['matched'] : '';
+                        ?>
+                    </span>
 
+                    <div class="form-item">
+                        <div class="item-left">
+                            <label for="password">Password</label>
+                        </div>
+                        <div class="item-right"><input type="password" name="password" placeholder="*******"
+                                id="password" value="<?php echo $password ?>"></div>
+                    </div>
+                    <span class="error">
+                        <?php
+                        echo !empty($errors['password']['required']) ? $errors['password']['required'] : '';
+                        echo !empty($errors['password']['matched']) ? $errors['password']['matched'] : '';
+                        ?>
+                    </span>
 
-                    <tr>
-                        <td><label for="password"> Password</label></p>
-                        </td>
-                        <td>
-                            <input type="password" name="password" placeholder="*******" id="password"
-                                value="<?php echo $password ?>">
-                        </td>
-                        <td class="error">
-                            <?php
-                            echo !empty($errors['password']['required']) ? $errors['password']['required'] : '';
-                            echo !empty($errors['password']['matched']) ? $errors['password']['matched'] : '';
-                            ?>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td style="color:rgb(217,67,66)"><label for="captcha">
+                    <div class="form-item">
+                        <div class="item-left">
+                            <label for="captcha" style="color:rgb(217,67,66)">
                                 <?php
                                 require_once "function/genCaptcha.php";
                                 echo $_SESSION['captchaSs'] ?>
-                            </label></td>
-                        <td>
-                            <input type="text" name="captcha" placeholder="Enter captcha" id="captcha">
-                        </td>
-                        <td class="error">
-                            <?php
-                            echo !empty($errors['captcha']['required']) ? $errors['captcha']['required'] : '';
-                            echo !empty($errors['captcha']['matched']) ? $errors['captcha']['matched'] : '';
-                            ?>
-                        </td>
-                    </tr>
+                            </label>
+                        </div>
+                        <div class="item-right"> <input type="text" name="captcha" placeholder="Enter captcha"
+                                id="captcha"></div>
+                    </div>
+                    <span class="error">
+                        <?php
+                        echo !empty($errors['captcha']['required']) ? $errors['captcha']['required'] : '';
+                        echo !empty($errors['captcha']['matched']) ? $errors['captcha']['matched'] : '';
+                        ?>
+                    </span>
 
-                    <tr class="btn">
-                        <td><input class="reset" type="reset"></td>
-                        <td><input class="submit" type="submit"></td>
-                    </tr>
-                </table>
+                    <div class="form-item">
+                        <div class="item-left"><input class="reset" type="reset"></div>
+                        <div class="item-right"> <input class="submit" type="submit"></div>
+                    </div>
+                </div>
             </fieldset>
-
         </form>
     </div>
 </body>
