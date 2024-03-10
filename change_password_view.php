@@ -102,8 +102,8 @@ require_once("function/change_password_handler.php");
     }
 
     .form-list .error {
-        padding-left: 170px;
-        font-size: 14px;
+        padding-left: 115px;
+        font-size: 10px;
         font-style: italic;
         color: red;
     }
@@ -165,7 +165,7 @@ require_once("function/change_password_handler.php");
                             <label for="oldpassword">Old Password</label>
                         </div>
                         <div class="item-right"> <input type="password" name="oldpassword" placeholder="******"
-                                value="<?php echo $oldpassword ?>"></div>
+                                value="<?php echo $oldpassword ?>" id="oldpassword"></div>
                     </div>
                     <span class="error">
                         <?php
@@ -179,13 +179,14 @@ require_once("function/change_password_handler.php");
                             <label for="newpassword">New Password</label>
                         </div>
                         <div class="item-right"> <input type="password" name="newpassword" placeholder="*******"
-                                value="<?php echo $newpassword ?>"></div>
+                                value="<?php echo $newpassword ?>" id="newpassword"></div>
                     </div>
                     <span class="error">
                         <?php
                         echo !empty($errors['newpassword']['required']) ? $errors['newpassword']['required'] : '';
                         echo !empty($errors['newpassword']['duplicate']) ? $errors['newpassword']['duplicate'] : '';
                         echo !empty($errors['newpassword']['min_length']) ? $errors['newpassword']['min_length'] : '';
+                        echo !empty($errors['newpassword']['invalid']) ? $errors['newpassword']['invalid'] : '';
                         ?>
                     </span>
 
@@ -194,7 +195,7 @@ require_once("function/change_password_handler.php");
                             <label for="cfnewpassword">Confirm Password</label>
                         </div>
                         <div class="item-right"> <input type="password" name="cfnewpassword" placeholder="*******"
-                                value="<?php echo $cfnewpassword ?>"></div>
+                                value="<?php echo $cfnewpassword ?>" id="cfnewpassword"></div>
                     </div>
                     <span class="error">
                         <?php
@@ -210,6 +211,54 @@ require_once("function/change_password_handler.php");
             </fieldset>
         </form>
     </div>
+    <script>
+        function validate() {
+            var password = document.getElementById("newpassword").value.trim();
+            var confirmPassword = document.getElementById("cfnewpassword").value.trim();
+            var error = document.getElementsByClassName("error");
+            var errorPassword = error[1]; // Lấy phần tử đầu tiên có class là "error"
+            var errorConfirm = error[2]; // Lấy phần tử thứ hai có class là "error"
+            if(!validatePassword(password,errorPassword)){
+                return false;
+            }
+           
+            if(!confirm(confirmPassword,password,errorConfirm)) { 
+                return false;
+            }
+            return true;
+           
+        }
+
+        function validatePassword(password, errorPassword) {
+            errorPassword.innerHTML="";
+            if (password === "") {
+                errorPassword.innerHTML = "Password không được để trống!";
+                return false;
+            } else if (password.length < 6) {
+                errorPassword.innerHTML = "Password ít nhất 6 ký tự!";
+                return false;
+            } else {
+                var specialCharRegex = /[!@#$%^&*(),.?":{}|<>]/;
+                var uppercaseCharRegex = /[A-Z]/;
+                var lowercaseCharRegex = /[a-z]/;
+                var numberRegex = /[0-9]/;
+                if (!specialCharRegex.test(password) || !uppercaseCharRegex.test(password) || !lowercaseCharRegex.test(
+                        password) || !numberRegex.test(password)) {
+                            errorPassword.innerHTML = "Password gồm số, chữ hoa,thường, kí tự đặc biệt !";
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        function confirm(cfPassword,password, errorConfirm){
+            if(cfPassword !== password){
+                errorConfirm.innerHTML = "Mật khẩu không khớp!";
+                return false;
+            }
+            return true;
+        }
+    </script>
 </body>
 
 </html>

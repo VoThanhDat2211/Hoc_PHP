@@ -21,10 +21,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if (empty($password)) {
         $errors["password"]["required"] = "Password không được để trống !";
-    } else {
-        if (strlen($password) < 6) {
+    } else if (strlen($password) < 6) {
             $errors["password"]["min_length"] = "Password ít nhất 6 ký tự !";
-        }
+    }
+    else{
+        $special_char_regex = '/[@_!#$%^&*()<>?\/|}{~:]/';
+            $uppercase_char_regex = '/[A-Z]/';
+            $lowercase_char_regex = '/[a-z]/';
+            $number_regex = '/[0-9]/';
+            if (
+                !preg_match($special_char_regex, $password) ||
+                !preg_match($uppercase_char_regex, $password) ||
+                !preg_match($lowercase_char_regex, $password) ||
+                !preg_match($number_regex, $password)
+            ) {
+                $errors["password"]["invalid"] = "Password gồm số, chữ hoa,thường, kí tự đặc biệt !";
+            }
     }
 
     if (empty($cfpassword)) {

@@ -3,7 +3,7 @@ $oldpassword = "";
 $newpassword = "";
 $cfnewpassword = "";
 // validate dữ liệu
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $oldpassword = $_POST["oldpassword"];
     $newpassword = $_POST["newpassword"];
     $cfnewpassword = $_POST["cfnewpassword"];
@@ -13,11 +13,24 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     if (empty($newpassword)) {
         $errors["newpassword"]["required"] = "New password không được để trống !";
+    } else if (strlen($newpassword) < 6) {
+        $errors["newpassword"]["min_length"] = "Password ít nhất 6 ký tự !";
     } else {
-        if (strlen($newpassword) < 6) {
-            $errors["newpassword"]["min_length"] = "Password ít nhất 6 ký tự !";
+        $special_char_regex = '/[@_!#$%^&*()<>?\/|}{~:]/';
+        $uppercase_char_regex = '/[A-Z]/';
+        $lowercase_char_regex = '/[a-z]/';
+        $number_regex = '/[0-9]/';
+        if (
+            !preg_match($special_char_regex, $newpassword) ||
+            !preg_match($uppercase_char_regex, $newpassword) ||
+            !preg_match($lowercase_char_regex, $newpassword) ||
+            !preg_match($number_regex, $newpassword)
+        ) {
+            $errors["newpassword"]["invalid"] = "Password gồm số, chữ hoa,thường, kí tự đặc biệt !";
         }
     }
+
+
 
     if (empty($cfnewpassword)) {
         $errors["cfnewpassword"]["required"] = "Bạn phải xác nhận mật khẩu !";
@@ -62,4 +75,3 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
     }
 }
-?>

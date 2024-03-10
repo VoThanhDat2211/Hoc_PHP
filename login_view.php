@@ -79,8 +79,8 @@ require_once("function/login_handler.php");
     }
 
     .form-list .error {
-        padding-left: 170px;
-        font-size: 14px;
+        padding-left: 115px;
+        font-size: 10px;
         color: red;
         opacity: 0.8;
     }
@@ -174,12 +174,51 @@ require_once("function/login_handler.php");
 
                     <div class="form-item">
                         <div class="item-left"><input class="reset" type="reset"></div>
-                        <div class="item-right"> <input class="submit" type="submit"></div>
+                        <div class="item-right"> <input class="submit" type="submit" onclick="return validateForm()" /></div>
                     </div>
                 </div>
             </fieldset>
         </form>
     </div>
+    <script>
+        function validateForm() {
+            var password = document.getElementById("password").value.trim();
+            var username = document.getElementById("username").value.trim();
+            var error = document.getElementsByClassName("error");
+            var errorUsername = error[0]; // Lấy phần tử đầu tiên có class là "error"
+            var errorPassword = error[1]; // Lấy phần tử thứ hai có class là "error"
+            if(!validateUsername(username,errorUsername)){
+                return false;
+            }
+           
+            if(!validatePassword(password,errorPassword)) { 
+                return false;
+            }
+            return true;
+           
+        }
+
+        function validateUsername(username, errorUsername) {
+            errorUsername.innerHTML="";
+            if (username === "") {
+                errorUsername.innerHTML = "Username không được để trống!";
+                return false;
+            }  
+            else{
+                return true;
+            }
+          
+        }
+
+        function validatePassword(password, errorPassword) {
+            errorPassword.innerHTML="";
+            if (password === "") {
+                errorPassword.innerHTML = "Password không được để trống!";
+                return false;
+            } 
+            return true;
+        }
+    </script>
 </body>
 
 </html>
