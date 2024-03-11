@@ -1,7 +1,22 @@
 <?php
+$session_lifetime = 60;
+session_set_cookie_params($session_lifetime);
 session_start();
 if (!isset($_SESSION["username"])) {
     header("Location: login_view.php");
+}
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
+    if ($_POST["submit"] == "Add") {
+        header("Location: add_todo_view.php");
+    }
+    if ($_POST["submit"] == "Delete") {
+        $_SESSION["taskStatus"] = $_POST["taskStatus"];
+        header("Location: ../function/delete_todo_handler.php");
+    }
+    if ($_POST["submit"] == "Save") {
+        $_SESSION["taskStatus"] = $_POST["taskStatus"];
+        header("Location: ../function/update_todo_handler.php");
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -19,7 +34,6 @@ if (!isset($_SESSION["username"])) {
         box-sizing: border-box;
     }
 
-    /* Header */
 
 
 
@@ -113,12 +127,12 @@ if (!isset($_SESSION["username"])) {
 </style>
 
 <body>
-    <?php include "include/header.php" ?>
+    <?php include "../include/header.php" ?>
     <div class="nav-todo">
         <p>
             <a href="logout.php" class="logout">Logout</a> <span> | </span>
             <a href="change_password_view.php">Change Password</a> <span> | </span>
-            <a href="function/deleteaccount_handler.php">Delete Account</a>
+            <a href="../function/deleteaccount_handler.php">Delete Account</a>
         </p>
     </div>
 
@@ -127,34 +141,42 @@ if (!isset($_SESSION["username"])) {
             <?php echo "Welcome   " . $_SESSION["username"] ?>
         </p>
     </div>
-
-    <div class="task-content">
-        <div class="add-title">
-            <div class="title">
-                <p style="color:rgb(148,148,148)">Title</p>
-                <div class="list-task">
-                    <?php
-                    require_once("function/list_task_handler.php");
-                    foreach ($titles as $title) {
-                        if ($title["completed"] == "0") {
-                            echo " <div class='task-item'><input type='checkbox'> <label>" . $title["title"] . "</label></div>";
-                        } else {
-                            echo " <div class='task-item'><input type='checkbox' checked> <label>" . $title["title"] . "</label></div>";
+    <form method="post">
+        <div class="task-content">
+            <div class="add-title">
+                <div class="title">
+                    <p style="color:rgb(148,148,148)">Title</p>
+                    <div class="list-task">
+                        <?php
+                        require_once("../function/list_task_handler.php");
+                        foreach ($titles as $title) {
+                            if ($title["completed"] == "0") {
+                                echo " <div class='task-item'><input type='checkbox' name='taskStatus[]' value='" . $title["title"] . "'> <label>" . $title["title"] . "</label></div>";
+                            } else if ($title["completed"] == "1") {
+                                echo " <div class='task-item'><input type='checkbox' name='taskStatus[]' value='" . $title["title"] . "' checked> <label>" . $title["title"] . "</label></div>";
+                            }
                         }
-                    }
-                    ?>
+                        ?>
+
+                    </div>
+                </div>
+                <div class="add">
+                    <input type="submit" class="addBtn" value="Add" name="submit"></a>
 
                 </div>
             </div>
-            <div class="add">
-                <input type="submit" class="addBtn" value="Add">
+            <div class="btn">
+                <a href="../function/delete_todo_handler.php"> <input type="submit" class="deleteBtn" value="Delete"
+                        name="submit"></a>
+
+                <input type="submit" class="saveBtn" value="Save" name="submit">
             </div>
         </div>
-        <div class="btn">
-            <input type="submit" class="deleteBtn" value="Delete">
-            <input type="submit" class="saveBtn" value="Save">
-        </div>
-    </div>
+    </form>
+
+    <?php
+
+    ?>
 </body>
 
 </html>

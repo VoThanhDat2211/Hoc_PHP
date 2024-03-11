@@ -13,9 +13,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $captcha = $_POST["captcha"];
     if (empty($username)) {
         $errors['username']['required'] = "Username không được để trống !";
+    } else if (strlen($password) < 6) {
+        $errors["password"]["min_length"] = "Password ít nhất 6 ký tự !";
     } else {
-        if (strlen($username) < 6) {
-            $errors["username"]["min_length"] = "Username ít nhất 6 ký tự !";
+        $special_char_regex = '/[@_!#$%^&*()<>?\/|}{~:]/';
+        $uppercase_char_regex = '/[A-Z]/';
+        $lowercase_char_regex = '/[a-z]/';
+        $number_regex = '/[0-9]/';
+        if (
+            !preg_match($special_char_regex, $password) ||
+            !preg_match($uppercase_char_regex, $password) ||
+            !preg_match($lowercase_char_regex, $password) ||
+            !preg_match($number_regex, $password)
+        ) {
+            $errors["password"]["invalid"] = "Password gồm số, chữ hoa,thường, kí tự đặc biệt !";
         }
     }
 
@@ -46,7 +57,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 // insert du lieu
 if (empty($errors) && !empty($username)) {
 
-    require_once "database/connectDB.php";
+    require_once "../database/connectDB.php";
 
     // Kiểm tra xem người dùng đã tồn tại chưa
     $sql = "SELECT * FROM user WHERE username = ?";
@@ -70,11 +81,12 @@ if (empty($errors) && !empty($username)) {
         $_SESSION["username"] = $username;
         if (empty($_SESSION["username"])) {
             // neu mat session dieu huong ve trang login
-            header("Location: function/login_view.php");
+            header("Location: ../function/login_view.php");
+            exit;
         }
 
         echo "<script>alert('Tạo tài khoản thành công')</script>";
-        echo "<script>window.location.href = '../todo_view.php';</script>";
+        echo "<script>window.location.href = 'todo_view.php';</script>";
     }
 
     $stmt->close();

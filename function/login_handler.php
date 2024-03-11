@@ -25,7 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     // connection db
     if (empty($errors) && !empty($username)) {
-        require_once "database/connectDB.php";
+        require_once "../database/connectDB.php";
         // lay du lieu tu db 
         $sql = "SELECT * FROM user WHERE username = ? AND is_delete = 0";
         $stmt = $conn->prepare($sql);

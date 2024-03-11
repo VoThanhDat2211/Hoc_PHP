@@ -1,7 +1,9 @@
 <?php
+$session_lifetime = 60;
+session_set_cookie_params($session_lifetime);
 session_start();
 if (!isset($_SESSION["username"])) {
-    header("Location: ../login_view.php");
+    header("Location: login_view.php");
 }
 
 if (isset($_POST["accept"])) {
@@ -31,17 +33,17 @@ if (isset($_POST["accept"])) {
             if ($result_deleteUser) {
                 session_destroy();
                 echo "<script>alert('Xóa tài khoản thành công')</script>";
-                echo "<script>window.location.href = '../login_view.php';</script>"; // Chuyển hướng trang bằng JavaScript
+                echo "<script>window.location.href = '../view/login_view.php';</script>"; // Chuyển hướng trang bằng JavaScript
                 exit;
             } else {
                 echo "<script>alert('Xóa tài khoản không thành công')</script>";
-                echo "<script>window.location.href = '../login_view.php';</script>"; // Chuyển hướng trang bằng JavaScript
+                echo "<script>window.location.href = '../view/login_view.php';</script>"; // Chuyển hướng trang bằng JavaScript
                 exit;
             }
         }
     }
 } else if (isset($_POST["cancel"])) {
-    header("Location: ../todo_view.php");
+    header("Location: ../view/todo_view.php");
 }
 ?>
 <!DOCTYPE html>

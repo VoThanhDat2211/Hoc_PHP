@@ -1,9 +1,7 @@
 <?php
 session_start();
-require_once("function/signup_handler.php");
-
+require_once("../function/login_handler.php");
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -23,7 +21,7 @@ require_once("function/signup_handler.php");
 
 
     /* Nav */
-    .login {
+    .signup {
         height: 60px;
         line-height: 60px;
         text-align: right;
@@ -32,13 +30,13 @@ require_once("function/signup_handler.php");
         font-size: 20px;
     }
 
-    .login a {
+    .signup a {
         text-decoration: none;
         color: red;
         margin-left: 8px;
     }
 
-    .login a:hover {
+    .signup a:hover {
         color: #CC0000;
     }
 
@@ -80,13 +78,11 @@ require_once("function/signup_handler.php");
         padding-left: 12px;
     }
 
-    .form-item .item-right {}
-
     .form-list .error {
-        padding-left: 170px;
-        font-size: 14px;
-        font-style: italic;
+        padding-left: 105px;
+        font-size: 10px;
         color: red;
+        opacity: 0.8;
     }
 
     .content input {
@@ -121,14 +117,14 @@ require_once("function/signup_handler.php");
 </head>
 
 <body>
-    <?php include "include/header.php" ?>
-    <div class="login">
-        <p>Already have a account <a href="login_view.php"> Login</a></p>
+    <?php include "../include/header.php" ?>
+    <div class="signup">
+        <p>Don't have an account <a href="signup_view.php"> Create New Account</a></p>
     </div>
     <div class="content">
         <form action="" method="post" id="form1">
             <fieldset>
-                <legend>Sign Up</legend>
+                <legend>Login</legend>
                 <div class="form-list">
                     <div class="form-item">
                         <div class="item-left">
@@ -140,8 +136,7 @@ require_once("function/signup_handler.php");
                     <span class="error">
                         <?php
                         echo !empty($errors['username']['required']) ? $errors['username']['required'] : '';
-                        echo !empty($errors['username']['min_length']) ? $errors['username']['min_length'] : '';
-                        echo !empty($errors['username']['duplicate']) ? $errors['username']['duplicate'] : '';
+                        echo !empty($errors['username']['matched']) ? $errors['username']['matched'] : '';
                         ?>
                     </span>
 
@@ -155,21 +150,7 @@ require_once("function/signup_handler.php");
                     <span class="error">
                         <?php
                         echo !empty($errors['password']['required']) ? $errors['password']['required'] : '';
-                        echo !empty($errors['password']['min_length']) ? $errors['password']['min_length'] : '';
-                        ?>
-                    </span>
-
-                    <div class="form-item">
-                        <div class="item-left">
-                            <label for="cfpassword">Confirm Password</label>
-                        </div>
-                        <div class="item-right"><input type="password" name="cfpassword" placeholder="*******"
-                                id="cfpassword" value="<?php echo $cfpassword ?>"></div>
-                    </div>
-                    <span class="error">
-                        <?php
-                        echo !empty($errors['cfpassword']['required']) ? $errors['cfpassword']['required'] : '';
-                        echo !empty($errors['cfpassword']['matched']) ? $errors['cfpassword']['matched'] : '';
+                        echo !empty($errors['password']['matched']) ? $errors['password']['matched'] : '';
                         ?>
                     </span>
 
@@ -177,7 +158,7 @@ require_once("function/signup_handler.php");
                         <div class="item-left">
                             <label for="captcha" style="color:rgb(217,67,66)">
                                 <?php
-                                require_once "function/genCaptcha.php";
+                                require_once "../function/genCaptcha.php";
                                 echo $_SESSION['captchaSs'] ?>
                             </label>
                         </div>
@@ -191,15 +172,53 @@ require_once("function/signup_handler.php");
                         ?>
                     </span>
 
-
                     <div class="form-item">
                         <div class="item-left"><input class="reset" type="reset"></div>
-                        <div class="item-right"> <input class="submit" type="submit"></div>
+                        <div class="item-right"> <input class="submit" type="submit" onclick="return validateForm()">
+                        </div>
                     </div>
                 </div>
             </fieldset>
         </form>
     </div>
+    <script>
+    function validateForm() {
+        var password = document.getElementById("password").value.trim();
+        var username = document.getElementById("username").value.trim();
+        var error = document.getElementsByClassName("error");
+        var errorUsername = error[0]; // Lấy phần tử đầu tiên có class là "error"
+        var errorPassword = error[1]; // Lấy phần tử thứ hai có class là "error"
+        if (!validateUsername(username, errorUsername)) {
+            return false;
+        }
+
+        if (!validatePassword(password, errorPassword)) {
+            return false;
+        }
+        return true;
+
+    }
+
+    function validateUsername(username, errorUsername) {
+        errorUsername.innerHTML = "";
+        if (username === "") {
+            errorUsername.innerHTML = "Username không được để trống!";
+            return false;
+        } else {
+            return true;
+        }
+
+    }
+
+    function validatePassword(password, errorPassword) {
+        errorPassword.innerHTML = "";
+        if (password === "") {
+            errorPassword.innerHTML = "Password không được để trống!";
+            return false;
+        }
+        return true;
+    }
+    </script>
 </body>
 
 </html>
