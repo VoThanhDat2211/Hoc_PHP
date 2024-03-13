@@ -38,14 +38,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $hashPasswordCheck = password_verify($password, $rows['password']);
             if ($hashPasswordCheck === true) {
                 $_SESSION["username"] = $rows["username"];
-                var_dump($_SESSION["username"]);
                 header("Location: todo_view.php");
+                exit;
             } else {
                 $errors["password"]["matched"] = "Mật khẩu không chính xác !";
             }
-        } else {
-            $errors["username"]["matched"] = "Username không tồn tại !";
         }
+    } else {
+        $errors["username"]["matched"] = "Username không tồn tại !";
     }
+
 }
 ?>
