@@ -63,7 +63,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     $sql = "UPDATE user SET password = '$password' WHERE username = '$username' ";
                     if ($conn->query($sql)) {
                         echo "<script>alert('Đổi mật khẩu thành công')</script>";
-                        echo "<script>window.location.href = '../todo_view.php';</script>";
+                        echo "<script>window.location.href = '../view/todo_view.php';</script>";
                     }
                 }
             } else {

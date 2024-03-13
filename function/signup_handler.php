@@ -67,7 +67,38 @@ if (empty($errors) && !empty($username)) {
     $result = $stmt->get_result();
 
     if ($result->num_rows > 0) {
-        $errors["username"]["duplicate"] = "Người dùng đã tồn tại";
+        $row = $result->fetch_assoc();
+        if ($row["is_delete"] == 0) {
+            $errors["username"]["duplicate"] = "Người dùng đã tồn tại";
+        } else {
+            //update username
+            $username = $row["username"];
+            $usernameUpdate = $row["username"] . "." . $row["id"];
+            $sql_update = "UPDATE user SET username = ? WHERE is_delete=1 AND username = ?";
+            $stmt = $conn->prepare($sql_update);
+            $stmt->bind_param("ss", $usernameUpdate, $username);
+            $stmt->execute();
+            //  Chèn người dùng mới vào cơ sở dữ liệu
+            $sql_insert = "INSERT INTO user (username, password) VALUES (?, ?)";
+            $stmt_insert = $conn->prepare($sql_insert);
+            $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+            $stmt_insert->bind_param("ss", $username, $passwordHash);
+            $stmt_insert->execute();
+            $stmt_insert->close();
+
+            //  set username vao session 
+            $_SESSION["username"] = $username;
+            if (empty($_SESSION["username"])) {
+                // neu mat session dieu huong ve trang login
+                header("Location: ../function/login_view.php");
+                exit;
+            }
+
+            echo "<script>alert('Tạo tài khoản thành công')</script>";
+            echo "<script>window.location.href = 'todo_view.php';</script>";
+        }
+
+
     } else {
         // Chèn người dùng mới vào cơ sở dữ liệu
         $sql_insert = "INSERT INTO user (username, password) VALUES (?, ?)";
@@ -87,9 +118,13 @@ if (empty($errors) && !empty($username)) {
 
         echo "<script>alert('Tạo tài khoản thành công')</script>";
         echo "<script>window.location.href = 'todo_view.php';</script>";
+
+
+
     }
 
-    $stmt->close();
-    $conn->close();
+
+
 }
+
 ?>

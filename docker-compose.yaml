@@ -1,0 +1,25 @@
+version: "3"
+services:
+  db:
+    image: mysql:latest
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: "12345"
+      MYSQL_USER: "test"
+      MYSQL_PASSWORD: "test"
+      MYSQL_DATABASE: "project_php"
+    volumes:
+      - ./mysql_data:/var/lib/mysql
+  php:
+    build:
+      context: .
+      dockerfile: PHP.Dockerfile
+    environment:
+      DB_HOST: "db"
+      DB_USER: "root"
+      DB_PWD: "12345"
+    ports:
+      - 8080:80
+    volumes:
+      - .:/var/www/html/

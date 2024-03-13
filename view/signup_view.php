@@ -1,7 +1,9 @@
 <?php
 session_start();
-require_once("../function/login_handler.php");
+require_once("../function/signup_handler.php");
+
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -21,7 +23,7 @@ require_once("../function/login_handler.php");
 
 
         /* Nav */
-        .signup {
+        .login {
             height: 60px;
             line-height: 60px;
             text-align: right;
@@ -30,13 +32,13 @@ require_once("../function/login_handler.php");
             font-size: 20px;
         }
 
-        .signup a {
+        .login a {
             text-decoration: none;
             color: red;
             margin-left: 8px;
         }
 
-        .signup a:hover {
+        .login a:hover {
             color: #CC0000;
         }
 
@@ -78,11 +80,13 @@ require_once("../function/login_handler.php");
             padding-left: 12px;
         }
 
+        .form-item .item-right {}
+
         .form-list .error {
             padding-left: 105px;
             font-size: 10px;
+            font-style: italic;
             color: red;
-            opacity: 0.8;
         }
 
         .content input {
@@ -118,13 +122,13 @@ require_once("../function/login_handler.php");
 
 <body>
     <?php include "../include/header.php" ?>
-    <div class="signup">
-        <p>Don't have an account <a href="signup_view.php"> Create New Account</a></p>
+    <div class="login">
+        <p>Already have a account <a href="login_view.php"> Login</a></p>
     </div>
     <div class="content">
         <form action="" method="post" id="form1">
             <fieldset>
-                <legend>Login</legend>
+                <legend>Sign Up</legend>
                 <div class="form-list">
                     <div class="form-item">
                         <div class="item-left">
@@ -136,7 +140,8 @@ require_once("../function/login_handler.php");
                     <span class="error">
                         <?php
                         echo !empty($errors['username']['required']) ? $errors['username']['required'] : '';
-                        echo !empty($errors['username']['matched']) ? $errors['username']['matched'] : '';
+                        echo !empty($errors['username']['min_length']) ? $errors['username']['min_length'] : '';
+                        echo !empty($errors['username']['duplicate']) ? $errors['username']['duplicate'] : '';
                         ?>
                     </span>
 
@@ -150,7 +155,22 @@ require_once("../function/login_handler.php");
                     <span class="error">
                         <?php
                         echo !empty($errors['password']['required']) ? $errors['password']['required'] : '';
-                        echo !empty($errors['password']['matched']) ? $errors['password']['matched'] : '';
+                        echo !empty($errors['password']['min_length']) ? $errors['password']['min_length'] : '';
+                        echo !empty($errors['password']['invalid']) ? $errors['password']['invalid'] : '';
+                        ?>
+                    </span>
+
+                    <div class="form-item">
+                        <div class="item-left">
+                            <label for="cfpassword">Confirm Password</label>
+                        </div>
+                        <div class="item-right"><input type="password" name="cfpassword" placeholder="*******"
+                                id="cfpassword" value="<?php echo $cfpassword ?>"></div>
+                    </div>
+                    <span class="error">
+                        <?php
+                        echo !empty($errors['cfpassword']['required']) ? $errors['cfpassword']['required'] : '';
+                        echo !empty($errors['cfpassword']['matched']) ? $errors['cfpassword']['matched'] : '';
                         ?>
                     </span>
 
@@ -172,17 +192,17 @@ require_once("../function/login_handler.php");
                         ?>
                     </span>
 
+
                     <div class="form-item">
                         <div class="item-left"><input class="reset" type="reset"></div>
-                        <div class="item-right"> <input class="submit" type="submit" onclick="return validateForm()">
-                        </div>
+                        <div class="item-right"> <input class="submit" type="submit" onclick="return validate()"></div>
                     </div>
                 </div>
             </fieldset>
         </form>
     </div>
     <script>
-        function validateForm() {
+        function validate() {
             var password = document.getElementById("password").value.trim();
             var username = document.getElementById("username").value.trim();
             var error = document.getElementsByClassName("error");
@@ -204,6 +224,10 @@ require_once("../function/login_handler.php");
             if (username === "") {
                 errorUsername.innerHTML = "Username không được để trống!";
                 return false;
+            }
+            if (username.length < 6) {
+                errorUsername.innerHTML = "Username ít nhất 6 ký tự!";
+                return false;
             } else {
                 return true;
             }
@@ -215,10 +239,31 @@ require_once("../function/login_handler.php");
             if (password === "") {
                 errorPassword.innerHTML = "Password không được để trống!";
                 return false;
+            } else if (password.length < 6) {
+                errorPassword.innerHTML = "Password ít nhất 6 ký tự!";
+                return false;
+            } else {
+                var specialCharRegex = /[!@#$%^&*(),.?":{}|<>]/;
+                var uppercaseCharRegex = /[A-Z]/;
+                var lowercaseCharRegex = /[a-z]/;
+                var numberRegex = /[0-9]/;
+                if (!specialCharRegex.test(password) || !uppercaseCharRegex.test(password) || !lowercaseCharRegex.test(
+                    password) || !numberRegex.test(password)) {
+                    errorPassword.innerHTML = "Password gồm số, chữ hoa,thường, kí tự đặc biệt !";
+                    return false;
+                }
             }
             return true;
         }
+
+        function test() {
+            var errorPassword = document.getElementsByClassName("error"); // Lấy phần tử thứ hai có class là "error"
+            console.log(errorPassword);
+            errorPassword[3].innerHTML = "abcasasaaaaaaaaaaaaaaaaaa";
+            return false;
+        }
     </script>
+
 </body>
 
 </html>

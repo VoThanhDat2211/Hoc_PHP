@@ -9,7 +9,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         $username = $_SESSION["username"];
         // kiem tra xem title da ton tai chua?
-        $sql_task = "SELECT *  FROM tasks t Inner Join user u ON t.user_id=u.id WHERE u.username = ? AND t.title =?";
+        $sql_task = "SELECT *  FROM tasks t Inner Join user u ON t.user_id=u.id WHERE u.username = ? AND t.title =? AND t.is_delete=0";
         $stmt_task = mysqli_prepare($conn, $sql_task);
         mysqli_stmt_bind_param($stmt_task, "ss", $username, $titleAdd);
         mysqli_stmt_execute($stmt_task);

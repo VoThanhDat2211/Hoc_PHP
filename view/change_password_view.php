@@ -165,7 +165,7 @@ require_once("../function/change_password_handler.php");
                             <label for="oldpassword">Old Password</label>
                         </div>
                         <div class="item-right"> <input type="password" name="oldpassword" placeholder="******"
-                                value="<?php echo $oldpassword ?>"></div>
+                                value="<?php echo $oldpassword ?>" id="oldpassword"></div>
                     </div>
                     <span class="error">
                         <?php
@@ -179,13 +179,14 @@ require_once("../function/change_password_handler.php");
                             <label for="newpassword">New Password</label>
                         </div>
                         <div class="item-right"> <input type="password" name="newpassword" placeholder="*******"
-                                value="<?php echo $newpassword ?>"></div>
+                                value="<?php echo $newpassword ?>" id="newpassword"></div>
                     </div>
                     <span class="error">
                         <?php
                         echo !empty($errors['newpassword']['required']) ? $errors['newpassword']['required'] : '';
                         echo !empty($errors['newpassword']['duplicate']) ? $errors['newpassword']['duplicate'] : '';
                         echo !empty($errors['newpassword']['min_length']) ? $errors['newpassword']['min_length'] : '';
+                        echo !empty($errors["newpassword"]["invalid"]) ? $errors["newpassword"]["invalid"] : "";
                         ?>
                     </span>
 
@@ -194,7 +195,7 @@ require_once("../function/change_password_handler.php");
                             <label for="cfnewpassword">Confirm Password</label>
                         </div>
                         <div class="item-right"> <input type="password" name="cfnewpassword" placeholder="*******"
-                                value="<?php echo $cfnewpassword ?>"></div>
+                                value="<?php echo $cfnewpassword ?>" id="cfnewpassword"></div>
                     </div>
                     <span class="error">
                         <?php
@@ -215,6 +216,8 @@ require_once("../function/change_password_handler.php");
             var password = document.getElementById("newpassword").value.trim();
             var confirmPassword = document.getElementById("cfnewpassword").value.trim();
             var error = document.getElementsByClassName("error");
+            console.log(password);
+            console.log(confirmPassword)
             var errorPassword = error[1]; // Lấy phần tử đầu tiên có class là "error"
             var errorConfirm = error[2]; // Lấy phần tử thứ hai có class là "error"
             if (!validatePassword(password, errorPassword)) {
